@@ -64,18 +64,101 @@
  *   highlightCheapestChai(document);
  *   // => "cutting" (cheapest chai gets "cheapest" class)
  */
+
+
 export function updateChaiPrice(document, chaiType, newPrice) {
   // Your code here
+  if (typeof chaiType !== "string" || chaiType.trim() === "")return false;
+  if (typeof newPrice !== "number" || newPrice <= 0) return false;
+
+  const priceElement = document.getElementById(`price-${chaiType}`)
+  if(priceElement) {
+    priceElement.textContent = `₹${newPrice}`
+    return true;
+  }
+  return false;
 }
 
 export function getChaiPrice(document, chaiType) {
   // Your code here
+  if (typeof chaiType !== 'string' || chaiType.trim() === '') {
+    return null;
+  }
+  const priceElement = document.getElementById(`price-${chaiType}`)
+  if (priceElement) {
+    // Read the text, remove the '₹' symbol, and convert it to a Number
+    const priceText = priceElement.textContent.replace('₹', '');
+    return Number(priceText);
+  }
+  return null;
 }
+
+// * DOM Structure expected:
+// *   <div class="chai-stall">
+// *     <h1 class="stall-name">Sharma Chai Wala</h1>
+// *     <div class="price-board">
+// *       <p id="price-masala" class="chai-price" data-chai="masala">₹15</p>
+// *       <p id="price-cutting" class="chai-price" data-chai="cutting">₹10</p>
+// *       <p id="price-adrak" class="chai-price" data-chai="adrak">₹20</p>
+// *     </div>
+// *   </div>
+// *   3. updateStallName(document, newName)
+// *      - Finds ".stall-name" element using querySelector
+// *      - Saves old textContent, updates to newName
+// *      - Returns old name string
+// *      - Agar element not found, return null
+// *      - Agar newName not string or empty, return null
 
 export function updateStallName(document, newName) {
   // Your code here
+  if (typeof newName !== 'string' || newName.trim() === '') {
+    return null;
+  }
+  const nameElement = document.querySelector('.stall-name');
+
+  if (nameElement) {
+    // Save the old name before overwriting it
+    const oldName = nameElement.textContent;
+    nameElement.textContent = newName;
+    return oldName;
+  }
+
+  return null;
 }
 
 export function highlightCheapestChai(document) {
   // Your code here
+  const priceElements = document.querySelectorAll('.chai-price');
+
+  if (!priceElements || priceElements.length === 0) {
+    return null;
+  }
+
+  let minPrice = Infinity;
+  let cheapestElement = null;
+
+  // 2. Loop through the NodeList to find the cheapest price
+  priceElements.forEach(element => {
+    // Clean up: remove the 'cheapest' class from everyone first
+    element.classList.remove('cheapest');
+
+    // Parse the current price
+    const currentPrice = Number(element.textContent.replace('₹', ''));
+
+    // Check if this is the cheapest one we've seen so far
+    if (currentPrice < minPrice) {
+      minPrice = currentPrice;
+      cheapestElement = element;
+    }
+  });
+
+  // 3. Highlight the winner and return its dataset value
+  if (cheapestElement) {
+    cheapestElement.classList.add('cheapest');
+    
+    // We can read 'data-chai' using the dataset property
+    return cheapestElement.dataset.chai; 
+  }
+
+  return null;
 }
