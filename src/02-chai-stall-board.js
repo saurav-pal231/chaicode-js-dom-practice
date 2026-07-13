@@ -93,22 +93,6 @@ export function getChaiPrice(document, chaiType) {
   return null;
 }
 
-// * DOM Structure expected:
-// *   <div class="chai-stall">
-// *     <h1 class="stall-name">Sharma Chai Wala</h1>
-// *     <div class="price-board">
-// *       <p id="price-masala" class="chai-price" data-chai="masala">₹15</p>
-// *       <p id="price-cutting" class="chai-price" data-chai="cutting">₹10</p>
-// *       <p id="price-adrak" class="chai-price" data-chai="adrak">₹20</p>
-// *     </div>
-// *   </div>
-// *   3. updateStallName(document, newName)
-// *      - Finds ".stall-name" element using querySelector
-// *      - Saves old textContent, updates to newName
-// *      - Returns old name string
-// *      - Agar element not found, return null
-// *      - Agar newName not string or empty, return null
-
 export function updateStallName(document, newName) {
   // Your code here
   if (typeof newName !== 'string' || newName.trim() === '') {
