@@ -57,6 +57,14 @@
  *   manager.getCount(); // => 3 (2 Diya + 1 Phool)
  *   manager.removeItem("Phool"); // => true
  */
+
+// *   1. setupAddButton(button, thaliElement, itemName)
+// *      - Adds a "click" event listener to button
+// *      - On click: creates an li element with textContent = itemName
+// *      - Appends the li to thaliElement
+// *      - Returns a cleanup function that removes the click listener
+// *      - Agar button, thaliElement, or itemName null/undefined, return null
+
 export function setupAddButton(button, thaliElement, itemName) {
   // Your code here
 }
