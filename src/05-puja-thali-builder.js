@@ -58,25 +58,95 @@
  *   manager.removeItem("Phool"); // => true
  */
 
-// *   1. setupAddButton(button, thaliElement, itemName)
-// *      - Adds a "click" event listener to button
-// *      - On click: creates an li element with textContent = itemName
-// *      - Appends the li to thaliElement
-// *      - Returns a cleanup function that removes the click listener
-// *      - Agar button, thaliElement, or itemName null/undefined, return null
-
 export function setupAddButton(button, thaliElement, itemName) {
   // Your code here
+  if (!button || !thaliElement || !itemName) return null
+  const handleAddClick = () => {
+    const li = document.createElement("li");
+    li.textContent = itemName
+    thaliElement.appendChild(li)
+  }
+
+  button.addEventListener('click', handleAddClick)
+
+  return function cleanup(){
+    button.removeEventListener('click', handleAddClick)
+  }
 }
 
 export function setupRemoveButton(button, thaliElement) {
   // Your code here
+  if(!button || !thaliElement) return null
+
+  const handleRemoveClick = () => {
+    if(thaliElement.lastElementChild) {
+      thaliElement.lastElementChild.remove()
+    }
+  }
+
+  button.addEventListener("click", handleRemoveClick);
+
+  return function cleanup() {
+    button.removeEventListener("click", handleRemoveClick);
+  };
 }
 
 export function setupToggleItem(button, thaliElement, itemName) {
   // Your code here
+  if(!button || !thaliElement || !itemName) return null
+  const handleToggleClick = () => {
+    // Convert children HTMLCollection to an Array to use .find()
+    const childrenArray = Array.from(thaliElement.children)
+    const existingItem = childrenArray.find(child => child.textContent === itemName)
+    
+    if(existingItem){
+      existingItem.remove();
+    } else {
+      const li = document.createElement("li");
+      li.textContent = itemName
+      thaliElement.appendChild(li);
+    }
+  }
+
+  button.addEventListener("click", handleToggleClick);
+  return function cleanup() {
+    button.removeEventListener("click", handleToggleClick)
+  }
 }
 
 export function createThaliManager(thaliElement, counterElement) {
   // Your code here
+  if(!thaliElement || !counterElement) {
+    return null;
+  }
+  const updateCounter = () => {
+    counterElement.textContent = thaliElement.children.length
+  }
+  return{
+    addItem(name){
+      const li = document.createElement("li")
+      li.textContent = name
+      thaliElement.appendChild(li)
+      updateCounter()
+      return li
+    },
+    removeItem(name) {
+      const childrenArray = Array.from(thaliElement.children)
+      const targetItem = childrenArray.find(child => child.textContent === name)
+
+      if(targetItem) {
+        targetItem.remove()
+        updateCounter()
+        return true
+      }
+      return false;
+    },
+    getCount(){
+      return thaliElement.children.length;
+    },
+    clear(){
+      thaliElement.innerHTML = ""
+      updateCounter();
+    }
+  }
 }
